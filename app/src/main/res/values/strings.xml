@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">FocusLock</string>
+    <string name="a11y_desc">Sends you back to FocusLock when you open a blocked app during a focus session.</string>
+</resources>
