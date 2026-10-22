@@ -26,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -131,7 +132,7 @@ class MainActivity : ComponentActivity() {
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
                 )
-                androidx.compose.material3.Switch(
+                Switch(
                     checked = darkMode,
                     onCheckedChange = { checked ->
                         darkMode = checked
@@ -293,15 +294,13 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     allowedExtras.forEach { pkg ->
-                        runCatching {
-                            val appInfo = context.packageManager.getApplicationInfo(pkg, 0)
-                            val label = context.packageManager.getApplicationLabel(appInfo)
-                            OutlinedButton(
-                                onClick = { launchApp(pkg) },
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(label.toString())
-                            }
+                        val appInfo = runCatching { context.packageManager.getApplicationInfo(pkg, 0) }.getOrNull()
+                        val label = appInfo?.let { runCatching { context.packageManager.getApplicationLabel(it).toString() }.getOrNull() } ?: pkg
+                        OutlinedButton(
+                            onClick = { launchApp(pkg) },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(label)
                         }
                     }
                 }
